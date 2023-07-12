@@ -1,4 +1,4 @@
-import mongoDbQueue from '../mongodb-queue';
+import mongoDbQueue from '../mynth-mongodb-queue';
 import setupMongo from './__helpers__/setup-mongo';
 
 describe('mongodb-queue', () => {

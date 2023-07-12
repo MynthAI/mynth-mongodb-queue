@@ -1,4 +1,4 @@
-# mongodb-queue
+# mynth-mongodb-queue
 
 [![NPM version][npm-image]][npm-url] ![Build Status][workflow-ci-url]
 [![license][license-image]][license-url] [![install size][size-image]][size-url]
@@ -13,13 +13,13 @@ using MongoDB.
 Install using yarn:
 
 ```bash
-yarn add @openwar/mongodb-queue
+yarn add mynth-mongodb-queue
 ```
 
 Or npm:
 
 ```bash
-npm install @openwar/mongodb-queue
+npm install mynth-mongodb-queue
 ```
 
 Create a connection to your MongoDB database, and use it to create a queue
@@ -27,7 +27,7 @@ object:
 
 ```js
 import { MongoClient } from 'mongodb';
-import mongoDbQueue from '@openwar/mongodb-queue';
+import mongoDbQueue from 'mynth-mongodb-queue';
 
 const url = 'mongodb://localhost:27017/';
 const client = new MongoClient(url, { useUnifiedTopology: true });
@@ -90,7 +90,7 @@ and a set of options. The MongoDB collection used is the same name as the name
 passed in:
 
 ```js
-import mongoDbQueue from '@openwar/mongodb-queue';
+import mongoDbQueue from 'mynth-mongodb-queue';
 
 // an instance of a queue
 const queue = mongoDbQueue(db, 'queue');
@@ -395,17 +395,3 @@ and as for the other features, I don't need them and might add them later.
 ## License
 
 This project it [MIT licensed](./LICENSE).
-
-[npm-image]: https://badge.fury.io/js/%40openwar%2Fmongodb-queue.svg
-[npm-url]: https://www.npmjs.com/package/@openwar/mongodb-queue
-[license-image]: https://img.shields.io/npm/l/@openwar/mongodb-queue
-[license-url]: https://www.npmjs.com/package/@openwar/mongodb-queue
-[workflow-ci-url]:
-  https://github.com/openwar/mongodb-queue/workflows/CI/badge.svg
-[size-image]: https://packagephobia.com/badge?p=@openwar/mongodb-queue
-[size-url]: https://packagephobia.com/result?p=@openwar/mongodb-queue
-[daviddm-image]: https://david-dm.org/openwar/mongodb-queue.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/openwar/mongodb-queue
-[codecov-image]:
-  https://codecov.io/gh/openwar/mongodb-queue/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/openwar/mongodb-queue
