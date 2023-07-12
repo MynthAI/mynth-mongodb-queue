@@ -41,5 +41,5 @@ describe('delay', () => {
 
     //@ts-expect-error check is defined above
     await queue.ack(message.ack);
-  });
+  }, 2000);
 });

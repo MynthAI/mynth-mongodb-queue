@@ -101,10 +101,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
       payload,
       tries: 0,
     };
-    console.log(
-      'expiry added for ',
-      new Date(now + (this._expiry + delay) * 1000),
-    );
+
     if (hashKey === undefined) {
       const result = await this.collection.insertOne({
         ...insertFields,
@@ -148,15 +145,14 @@ class MongoDbQueueImpl implements MongoDbQueue {
   ): Promise<Message<T> | undefined> {
     const visibility = options.visibility || this._visibility;
     const now = Date.now();
-    console.log('now in get', new Date(now));
+
     // Delete expired messages
     const deleteQuery = {
       expiry: { $lte: new Date(now) },
       deleted: null,
     };
 
-    const messagesToDelete = await this.collection.find(deleteQuery).toArray();
-    console.log('Messages being deleted:', messagesToDelete);
+    await this.collection.find(deleteQuery).toArray();
 
     await this.collection.deleteMany(deleteQuery);
 
@@ -177,7 +173,6 @@ class MongoDbQueueImpl implements MongoDbQueue {
       sort: { _id: 1 },
       returnDocument: 'after',
     });
-    console.log('result', result);
     const message = result.value;
 
     // Nothing in the queue
