@@ -21,54 +21,42 @@ describe('payloads', () => {
     value
     ${'test message'}
     ${''}
-  `(
-    'allows string with `$value`',
-    async ({ value }: { value: string }) => {
-      const queue = mongoDbQueue<string>(setupDb.db, queueName);
+  `('allows string with `$value`', async ({ value }: { value: string }) => {
+    const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
-      await queue.add(value);
+    await queue.add(value);
 
-      const message = await queue.get();
+    const message = await queue.get();
 
-      expect(message?.payload).toEqual(value);
-    },
-    10000,
-  );
+    expect(message?.payload).toEqual(value);
+  });
 
   it.each`
     value
     ${0}
     ${10}
     ${-20}
-  `(
-    'allows numbers with `$value`',
-    async ({ value }: { value: number }) => {
-      const queue = mongoDbQueue<number>(setupDb.db, queueName);
+  `('allows numbers with `$value`', async ({ value }: { value: number }) => {
+    const queue = mongoDbQueue<number>(setupDb.db, queueName);
 
-      await queue.add(value);
+    await queue.add(value);
 
-      const message = await queue.get();
+    const message = await queue.get();
 
-      expect(message?.payload).toEqual(value);
-    },
-    10000,
-  );
+    expect(message?.payload).toEqual(value);
+  });
 
   it.each`
     value
     ${true}
     ${false}
-  `(
-    'allows boolean with `$value`',
-    async ({ value }: { value: boolean }) => {
-      const queue = mongoDbQueue<boolean>(setupDb.db, queueName);
+  `('allows boolean with `$value`', async ({ value }: { value: boolean }) => {
+    const queue = mongoDbQueue<boolean>(setupDb.db, queueName);
 
-      await queue.add(value);
+    await queue.add(value);
 
-      expect((await queue.get())?.payload).toEqual(value);
-    },
-    10000,
-  );
+    expect((await queue.get())?.payload).toEqual(value);
+  });
 
   it('allows objects', async () => {
     type Complex = { something: string };
@@ -82,27 +70,23 @@ describe('payloads', () => {
 
     expect(message?.payload).toEqual({ something: 'complex' });
     expect(message?.payload).not.toBe(payload);
-  }, 10000);
+  });
 
   it.each`
     value
     ${[]}
     ${[-2, 0, 3]}
-  `(
-    'allows arrays with `$value`',
-    async ({ value }: { value: number[] }) => {
-      const queue = mongoDbQueue<number[]>(setupDb.db, queueName);
+  `('allows arrays with `$value`', async ({ value }: { value: number[] }) => {
+    const queue = mongoDbQueue<number[]>(setupDb.db, queueName);
 
-      const payload = [...value];
-      await queue.add(payload);
+    const payload = [...value];
+    await queue.add(payload);
 
-      const message = await queue.get();
+    const message = await queue.get();
 
-      expect(message?.payload).toEqual(value);
-      expect(message?.payload).not.toBe(payload);
-    },
-    10000,
-  );
+    expect(message?.payload).toEqual(value);
+    expect(message?.payload).not.toBe(payload);
+  });
 
   it('allows complex arrays', async () => {
     type Complex = string | { test: string };
@@ -116,5 +100,5 @@ describe('payloads', () => {
 
     expect(message?.payload).toEqual(['test message', { test: 'message' }]);
     expect(message?.payload).not.toBe(payload);
-  }, 10000);
+  });
 });

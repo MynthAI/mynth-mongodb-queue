@@ -43,7 +43,7 @@ describe('ping', () => {
 
     // @ts-expect-error check is defined above
     await queue.ack(message.ack);
-  }, 3000);
+  }, 2000);
 
   it('does not allow acknowledged messages to be pinged', async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName, {

@@ -21,7 +21,7 @@ describe('mongodb-queue', () => {
     const queue = mongoDbQueue(setupDb.db, queueName);
 
     expect(await queue.get()).toBeUndefined();
-  }, 1000000);
+  });
 
   it('handles single round trip message', async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
@@ -51,7 +51,7 @@ describe('mongodb-queue', () => {
     // @ts-expect-error check is defined above
     const id = await queue.ack(message.ack);
     expect(id).toBeDefined();
-  }, 1000000);
+  });
 
   it('does not allow an message to be acknowledged twice', async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
@@ -68,14 +68,14 @@ describe('mongodb-queue', () => {
     await expect(queue.ack(message.ack)).rejects.toThrow(
       /^Queue.ack\(\): Unidentified ack : (.+)$/,
     );
-  }, 1000000);
+  });
 
   it('throws when not passing a db', () => {
     // @ts-expect-error testing without required db param
     expect(() => mongoDbQueue()).toThrow(
       /^Please provide a mongodb.MongoClient.db$/,
     );
-  }, 1000000);
+  });
 
   it('throws when not passing a valid queue name', () => {
     // @ts-expect-error testing without required queue name param
@@ -85,5 +85,5 @@ describe('mongodb-queue', () => {
     expect(() => mongoDbQueue(setupDb.db, '')).toThrow(
       /^Please provide a queue name$/,
     );
-  }, 1000000);
+  });
 });
