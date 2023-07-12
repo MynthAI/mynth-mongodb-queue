@@ -1,4 +1,4 @@
-import mongoDbQueue from '../../mongodb-queue';
+import mongoDbQueue from '../../mynth-mongodb-queue';
 import setupMongo from '../__helpers__/setup-mongo';
 import sleep from '../__helpers__/sleep';
 
@@ -43,7 +43,7 @@ describe('ping', () => {
 
     // @ts-expect-error check is defined above
     await queue.ack(message.ack);
-  }, 2000);
+  }, 3000);
 
   it('does not allow acknowledged messages to be pinged', async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName, {

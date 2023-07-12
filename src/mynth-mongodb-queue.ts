@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2020-2022 Filipe Guerra
- * https://github.com/openwar/mongodb-queue
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 import crypto from 'crypto';
 import type { Db, Filter, UpdateFilter } from 'mongodb';
 
@@ -18,10 +10,12 @@ type MessageSchema = {
   createdAt: Date;
   updatedAt?: Date;
   visible: Date;
+  expiry: Date;
   payload: unknown;
   ack?: string;
   tries: number;
   occurrences?: number;
+  deleted?: Date | null;
 };
 
 export type Message<T = unknown> = {
@@ -63,12 +57,17 @@ class MongoDbQueueImpl implements MongoDbQueue {
   private _db: Db;
   private _name: string;
   private _visibility: number;
+  private _expiry: number;
 
   private get collection() {
     return this._db.collection<MessageSchema>(this._name);
   }
 
-  constructor(db: Db, name: string, options: { visibility?: number } = {}) {
+  constructor(
+    db: Db,
+    name: string,
+    options: { visibility?: number; expiry?: number } = {},
+  ) {
     if (!db) {
       throw new Error('Please provide a mongodb.MongoClient.db');
     }
@@ -79,6 +78,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
     this._db = db;
     this._name = name;
     this._visibility = options.visibility || 30;
+    this._expiry = options.expiry || 3600;
   }
 
   async createIndexes() {
@@ -91,16 +91,20 @@ class MongoDbQueueImpl implements MongoDbQueue {
 
   async add<T>(payload: T, options?: AddOptions<T>): Promise<string> {
     const hashKey = options?.hashKey;
-    const delay = options?.delay ?? 0;
+    const delay = options?.delay || 0;
     const now = Date.now();
 
     const insertFields = {
       createdAt: new Date(now),
       visible: new Date(now + delay * 1000),
+      expiry: new Date(now + (this._expiry + delay) * 1000),
       payload,
       tries: 0,
     };
-
+    console.log(
+      'expiry added for ',
+      new Date(now + (this._expiry + delay) * 1000),
+    );
     if (hashKey === undefined) {
       const result = await this.collection.insertOne({
         ...insertFields,
@@ -114,9 +118,9 @@ class MongoDbQueueImpl implements MongoDbQueue {
       payload: { $eq: hashKey },
     };
 
-    if (typeof payload === 'object') {
+    if (payload !== null && typeof payload === 'object') {
       filter = {
-        [`payload.${hashKey}`]: payload[hashKey as keyof T],
+        [`payload.${String(hashKey)}`]: payload[hashKey as keyof T],
       };
     }
 
@@ -133,7 +137,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
     );
 
     if (!message.value) {
-      throw new Error(`Queue.add(): Failed add message`);
+      throw new Error(`Queue.add(): Failed to add message`);
     }
 
     return message.value._id.toHexString();
@@ -143,8 +147,18 @@ class MongoDbQueueImpl implements MongoDbQueue {
     options: { visibility?: number } = {},
   ): Promise<Message<T> | undefined> {
     const visibility = options.visibility || this._visibility;
-
     const now = Date.now();
+    console.log('now in get', new Date(now));
+    // Delete expired messages
+    const deleteQuery = {
+      expiry: { $lte: new Date(now) },
+      deleted: null,
+    };
+
+    const messagesToDelete = await this.collection.find(deleteQuery).toArray();
+    console.log('Messages being deleted:', messagesToDelete);
+
+    await this.collection.deleteMany(deleteQuery);
 
     const query = {
       deleted: null,
@@ -163,17 +177,17 @@ class MongoDbQueueImpl implements MongoDbQueue {
       sort: { _id: 1 },
       returnDocument: 'after',
     });
-
+    console.log('result', result);
     const message = result.value;
 
-    // nothing in the queue
+    // Nothing in the queue
     if (!message) return;
 
     if (!message.ack || !message.updatedAt) {
       throw new Error(`Queue.get(): Failed to update message`);
     }
 
-    // convert to an external representation
+    // Convert to an external representation
     return {
       id: message._id.toHexString(),
       ack: message.ack,
@@ -273,7 +287,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
 export default function mongoDbQueue<T = unknown>(
   db: Db,
   name: string,
-  options: { visibility?: number } = {},
+  options: { visibility?: number; expiry?: number } = {},
 ): MongoDbQueue<T> {
   return new MongoDbQueueImpl(db, name, options);
 }

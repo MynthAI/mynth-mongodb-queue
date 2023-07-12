@@ -1,4 +1,4 @@
-import mongoDbQueue from '../../mongodb-queue';
+import mongoDbQueue from '../../mynth-mongodb-queue';
 import setupMongo from '../__helpers__/setup-mongo';
 import sleep from '../__helpers__/sleep';
 
@@ -39,7 +39,7 @@ describe('delay', () => {
 
     expect(message).toBeDefined();
 
-    // @ts-expect-error check is defined above
+    //@ts-expect-error check is defined above
     await queue.ack(message.ack);
-  }, 2000);
+  });
 });

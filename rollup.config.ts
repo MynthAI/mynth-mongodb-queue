@@ -8,16 +8,12 @@ import pkg from './package.json';
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
 const config: RollupOptions = {
-  input: 'src/mongodb-queue.ts',
+  input: 'src/mynth-mongodb-queue.ts',
 
   // Specify here external modules which you don't want to include in your
   // bundle (for instance: 'lodash', 'moment' etc.)
   // https://rollupjs.org/guide/en#external-e-external
-  external: [
-    ...builtinModules,
-    ...Object.keys(pkg.dependencies ?? {}),
-    ...Object.keys(pkg.peerDependencies ?? {}),
-  ],
+  external: [...builtinModules, ...Object.keys(pkg.dependencies ?? {})],
 
   plugins: [
     // Allows node_modules resolution
