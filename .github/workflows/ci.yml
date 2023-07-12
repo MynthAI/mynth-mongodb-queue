@@ -30,17 +30,6 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [18.x]
-        mongodb-version: ['5.0']
-
-    env:
-      NODE: ${{ matrix.node-version }}
-      MONGO: ${{ matrix.mongodb-version }}
-
-    services:
-      mongodb:
-        image: mongo:${{ matrix.mongodb-version }}
-        ports:
-          - 27017:27017
 
     steps:
       - uses: actions/checkout@v3
@@ -52,14 +41,4 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - run: yarn test --coverage
-        env:
-          CI: true
-          MONGO_DB_NAME: mongodb-queue
-
-      - name: Code Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          env_vars: NODE,MONGO
-          fail_ci_if_error: true
+      - run: yarn run test
