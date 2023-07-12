@@ -6,7 +6,6 @@ describe('duplicates', () => {
   const setupDb = setupMongo();
 
   beforeAll(async () => {
-    jest.setTimeout(90 * 1000);
     await setupDb.connect();
   });
 
@@ -45,63 +44,76 @@ describe('duplicates', () => {
       expect((await queue.get())?.occurrences).toBe(2);
       expect(await queue.size()).toBe(0);
     },
+    10000,
   );
 
   it.each`
     value
     ${'test message'}
     ${''}
-  `('allows string with `$value`', async ({ value }: { value: string }) => {
-    const queue = mongoDbQueue<string>(setupDb.db, queueName);
+  `(
+    'allows string with `$value`',
+    async ({ value }: { value: string }) => {
+      const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
-    const payload = value;
+      const payload = value;
 
-    const messageId1 = await queue.add(payload, { hashKey: payload });
-    const messageId2 = await queue.add(payload, { hashKey: payload });
+      const messageId1 = await queue.add(payload, { hashKey: payload });
+      const messageId2 = await queue.add(payload, { hashKey: payload });
 
-    expect(messageId1).toBeDefined();
-    expect(messageId2).toBeDefined();
-    expect(messageId2).toBe(messageId1);
-    expect((await queue.get())?.occurrences).toBe(2);
-    expect(await queue.size()).toBe(0);
-  });
+      expect(messageId1).toBeDefined();
+      expect(messageId2).toBeDefined();
+      expect(messageId2).toBe(messageId1);
+      expect((await queue.get())?.occurrences).toBe(2);
+      expect(await queue.size()).toBe(0);
+    },
+    10000,
+  );
 
   it.each`
     value
     ${0}
     ${10}
     ${-20}
-  `('allows number with `$value`', async ({ value }: { value: number }) => {
-    const queue = mongoDbQueue<number>(setupDb.db, queueName);
+  `(
+    'allows number with `$value`',
+    async ({ value }: { value: number }) => {
+      const queue = mongoDbQueue<number>(setupDb.db, queueName);
 
-    const payload = value;
+      const payload = value;
 
-    const messageId1 = await queue.add(payload, { hashKey: payload });
-    const messageId2 = await queue.add(payload, { hashKey: payload });
+      const messageId1 = await queue.add(payload, { hashKey: payload });
+      const messageId2 = await queue.add(payload, { hashKey: payload });
 
-    expect(messageId1).toBeDefined();
-    expect(messageId2).toBeDefined();
-    expect(messageId2).toBe(messageId1);
-    expect((await queue.get())?.occurrences).toBe(2);
-    expect(await queue.size()).toBe(0);
-  });
+      expect(messageId1).toBeDefined();
+      expect(messageId2).toBeDefined();
+      expect(messageId2).toBe(messageId1);
+      expect((await queue.get())?.occurrences).toBe(2);
+      expect(await queue.size()).toBe(0);
+    },
+    10000,
+  );
 
   it.each`
     value
     ${true}
     ${false}
-  `('allows boolean with `$value`', async ({ value }: { value: boolean }) => {
-    const queue = mongoDbQueue<boolean>(setupDb.db, queueName);
+  `(
+    'allows boolean with `$value`',
+    async ({ value }: { value: boolean }) => {
+      const queue = mongoDbQueue<boolean>(setupDb.db, queueName);
 
-    const payload = value;
+      const payload = value;
 
-    const messageId1 = await queue.add(payload, { hashKey: payload });
-    const messageId2 = await queue.add(payload, { hashKey: payload });
+      const messageId1 = await queue.add(payload, { hashKey: payload });
+      const messageId2 = await queue.add(payload, { hashKey: payload });
 
-    expect(messageId1).toBeDefined();
-    expect(messageId2).toBeDefined();
-    expect(messageId2).toBe(messageId1);
-    expect((await queue.get())?.occurrences).toBe(2);
-    expect(await queue.size()).toBe(0);
-  });
+      expect(messageId1).toBeDefined();
+      expect(messageId2).toBeDefined();
+      expect(messageId2).toBe(messageId1);
+      expect((await queue.get())?.occurrences).toBe(2);
+      expect(await queue.size()).toBe(0);
+    },
+    10000,
+  );
 });

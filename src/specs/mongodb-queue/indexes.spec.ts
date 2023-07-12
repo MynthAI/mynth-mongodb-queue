@@ -6,7 +6,6 @@ describe('indexes', () => {
   const setupDb = setupMongo();
 
   beforeAll(async () => {
-    jest.setTimeout(90 * 1000);
     await setupDb.connect();
   });
 
