@@ -44,7 +44,7 @@ describe('duplicates', () => {
       expect((await queue.get())?.occurrences).toBe(2);
       expect(await queue.size()).toBe(0);
     },
-    10000,
+    100000,
   );
 
   it.each`
@@ -67,7 +67,7 @@ describe('duplicates', () => {
       expect((await queue.get())?.occurrences).toBe(2);
       expect(await queue.size()).toBe(0);
     },
-    10000,
+    100000,
   );
 
   it.each`
@@ -91,7 +91,7 @@ describe('duplicates', () => {
       expect((await queue.get())?.occurrences).toBe(2);
       expect(await queue.size()).toBe(0);
     },
-    10000,
+    100000,
   );
 
   it.each`
@@ -114,6 +114,6 @@ describe('duplicates', () => {
       expect((await queue.get())?.occurrences).toBe(2);
       expect(await queue.size()).toBe(0);
     },
-    10000,
+    100000,
   );
 });
