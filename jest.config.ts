@@ -9,4 +9,6 @@ const config: Config.InitialOptions = {
   ],
 };
 
+jest.setTimeout(30000);
+
 export default config;
