@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -56,7 +56,7 @@ jobs:
       # peerDeps installs
       - run: yarn add -D mongodb@${{matrix.mongodb-lib}}
 
-      - run: yarn test --coverage
+      - run: yarn test
         env:
           CI: true
           MONGO_DB_NAME: mongodb-queue
