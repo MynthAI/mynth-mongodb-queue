@@ -58,6 +58,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
   private _name: string;
   private _visibility: number;
   private _expiry: number;
+  private _shouldEnforceUniquePayload: boolean;
 
   private get collection() {
     return this._db.collection<MessageSchema>(this._name);
@@ -66,7 +67,11 @@ class MongoDbQueueImpl implements MongoDbQueue {
   constructor(
     db: Db,
     name: string,
-    options: { visibility?: number; expiry?: number } = {},
+    options: {
+      visibility?: number;
+      expiry?: number;
+      shouldEnforceUniquePayload?: boolean;
+    } = {},
   ) {
     if (!db) {
       throw new Error('Please provide a mongodb.MongoClient.db');
@@ -79,6 +84,8 @@ class MongoDbQueueImpl implements MongoDbQueue {
     this._name = name;
     this._visibility = options.visibility || 30;
     this._expiry = options.expiry || 3600;
+    this._shouldEnforceUniquePayload =
+      options.shouldEnforceUniquePayload || false;
   }
 
   async createIndexes() {
@@ -87,6 +94,10 @@ class MongoDbQueueImpl implements MongoDbQueue {
       { ack: 1 },
       { unique: true, sparse: true },
     );
+
+    if (this._shouldEnforceUniquePayload) {
+      await this.collection.createIndex({ payload: 1 }, { unique: true });
+    }
   }
 
   async add<T>(payload: T, options?: AddOptions<T>): Promise<string> {
@@ -282,7 +293,11 @@ class MongoDbQueueImpl implements MongoDbQueue {
 export default function mongoDbQueue<T = unknown>(
   db: Db,
   name: string,
-  options: { visibility?: number; expiry?: number } = {},
+  options: {
+    visibility?: number;
+    expiry?: number;
+    shouldEnforceUniquePayload?: boolean;
+  } = {},
 ): MongoDbQueue<T> {
   return new MongoDbQueueImpl(db, name, options);
 }
