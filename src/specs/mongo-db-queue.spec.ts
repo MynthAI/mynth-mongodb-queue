@@ -53,6 +53,29 @@ describe('mongodb-queue', () => {
     expect(id).toBeDefined();
   });
 
+  it('does not allow an message to be added twice if uniquekeys are repeated', async () => {
+    const queue = mongoDbQueue(setupDb.db, queueName, {
+      shouldEnforceUniquePayload: true,
+    });
+    await queue.createIndexes();
+
+    // await queue.add({text: 'test message'});
+    const payload = {
+      address:
+        'stake_test1uzd3t2cfyp0nzgy0dslsaaq5rcr686wnnsqgakga8hlj5ygskg9g6',
+      utxoHash: 'tx-hash',
+      amountOfAda: '1000.00',
+    };
+    await queue.add({ payload });
+    const message = await queue.get();
+
+    expect(message).toBeDefined();
+
+    await expect(queue.add({ payload })).rejects.toThrow(
+      /E11000 duplicate key error/,
+    );
+  });
+
   it('does not allow an message to be acknowledged twice', async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
