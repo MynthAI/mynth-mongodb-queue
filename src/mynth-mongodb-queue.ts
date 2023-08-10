@@ -42,6 +42,8 @@ export interface MongoDbQueue<T = unknown> {
 
   ping(ack: string, options?: { visibility?: number }): Promise<string>;
 
+  has(data: any, fieldToCheck?: string): Promise<boolean>;
+
   ack(ack: string): Promise<string>;
 
   total(): Promise<number>;
@@ -245,6 +247,19 @@ class MongoDbQueueImpl implements MongoDbQueue {
     }
 
     return message.value._id.toHexString();
+  }
+
+  async has(data: any, fieldToCheck?: string) {
+    const query: any = {};
+
+    if (fieldToCheck) {
+      query[`payload.${fieldToCheck}`] = data;
+    } else {
+      query.payload = data;
+    }
+
+    const matchingEntries = await this.collection.find(query).toArray();
+    return matchingEntries.length > 0;
   }
 
   async total() {
