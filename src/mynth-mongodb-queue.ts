@@ -10,7 +10,7 @@ type MessageSchema = {
   createdAt: Date;
   updatedAt?: Date;
   visible: Date;
-  expiry: Date;
+  expiry?: Date;
   payload: unknown;
   ack?: string;
   tries: number;
@@ -57,7 +57,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
   private _db: Db;
   private _name: string;
   private _visibility: number;
-  private _expiry: number;
+  private _expiry?: number;
   private _shouldEnforceUniquePayload: boolean;
 
   private get collection() {
@@ -83,7 +83,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
     this._db = db;
     this._name = name;
     this._visibility = options.visibility || 30;
-    this._expiry = options.expiry || 3600;
+    this._expiry = options.expiry;
     this._shouldEnforceUniquePayload =
       options.shouldEnforceUniquePayload || false;
   }
@@ -108,7 +108,9 @@ class MongoDbQueueImpl implements MongoDbQueue {
     const insertFields = {
       createdAt: new Date(now),
       visible: new Date(now + delay * 1000),
-      expiry: new Date(now + (this._expiry + delay) * 1000),
+      ...(this._expiry
+        ? { expiry: new Date(now + (this._expiry + delay) * 1000) }
+        : {}),
       payload,
       tries: 0,
     };
