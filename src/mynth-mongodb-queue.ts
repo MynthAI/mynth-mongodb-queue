@@ -165,9 +165,6 @@ class MongoDbQueueImpl implements MongoDbQueue {
       deleted: null,
     };
 
-    const entries = await this.collection.find({}).toArray();
-    console.log('all entries in collection before delete', entries);
-
     await this.collection.find(deleteQuery).toArray();
 
     await this.collection.deleteMany(deleteQuery);

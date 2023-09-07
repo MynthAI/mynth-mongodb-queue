@@ -74,7 +74,7 @@ describe('expiry', () => {
     message = await queue.get();
     expect(message).toBeDefined();
 
-    // Wait for 2 more seconds, message should expire and be deleted from the queue
+    // Wait for 2 more seconds, message should still be visible not deleted
     await sleep(2000);
 
     message = await queue.get({ visibility: 1 });
