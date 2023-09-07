@@ -2,10 +2,6 @@ name: Publish to npm
 
 on:
   pull_request:
-    types:
-      - closed
-    branches:
-      - main
 
 jobs:
   publish-npm:
@@ -18,7 +14,7 @@ jobs:
           token: ${{ secrets.PAT }}
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18.16.1
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build

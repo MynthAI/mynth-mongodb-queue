@@ -1,6 +1,6 @@
 {
   "name": "mynth-mongodb-queue",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Use your existing MongoDB as a local queue",
   "main": "dist/mynth-mongodb-queue.js",
   "module": "dist/mynth-mongodb-queue.es.js",
