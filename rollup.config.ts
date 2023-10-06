@@ -1,14 +1,14 @@
-import { babel } from '@rollup/plugin-babel';
-import commonjs from '@rollup/plugin-commonjs';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import builtinModules from 'builtin-modules/static';
-import type { RollupOptions } from 'rollup';
-import pkg from './package.json';
+import { babel } from "@rollup/plugin-babel";
+import commonjs from "@rollup/plugin-commonjs";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import builtinModules from "builtin-modules/static";
+import type { RollupOptions } from "rollup";
+import pkg from "./package.json";
 
-const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 const config: RollupOptions = {
-  input: 'src/mynth-mongodb-queue.ts',
+  input: "src/mynth-mongodb-queue.ts",
 
   // Specify here external modules which you don't want to include in your
   // bundle (for instance: 'lodash', 'moment' etc.)
@@ -25,22 +25,22 @@ const config: RollupOptions = {
     // Compile TypeScript/JavaScript files
     babel({
       extensions,
-      babelHelpers: 'bundled',
-      include: ['src/**/*'],
-      exclude: ['**/specs/**'],
+      babelHelpers: "bundled",
+      include: ["src/**/*"],
+      exclude: ["**/specs/**"],
     }),
   ],
 
   output: [
     {
       file: pkg.main,
-      format: 'cjs',
-      exports: 'default',
+      format: "cjs",
+      exports: "default",
       sourcemap: true,
     },
     {
       file: pkg.module,
-      format: 'es',
+      format: "es",
       sourcemap: true,
     },
   ],

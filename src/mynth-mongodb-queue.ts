@@ -1,9 +1,9 @@
-import crypto from 'crypto';
-import type { Db, Filter, UpdateFilter } from 'mongodb';
+import crypto from "crypto";
+import type { Db, Filter, UpdateFilter } from "mongodb";
 
 // some helper functions
 function id() {
-  return crypto.randomBytes(16).toString('hex');
+  return crypto.randomBytes(16).toString("hex");
 }
 
 type MessageSchema = {
@@ -71,13 +71,13 @@ class MongoDbQueueImpl implements MongoDbQueue {
       visibility?: number;
       expiry?: number;
       shouldEnforceUniquePayload?: boolean;
-    } = {},
+    } = {}
   ) {
     if (!db) {
-      throw new Error('Please provide a mongodb.MongoClient.db');
+      throw new Error("Please provide a mongodb.MongoClient.db");
     }
     if (!name) {
-      throw new Error('Please provide a queue name');
+      throw new Error("Please provide a queue name");
     }
 
     this._db = db;
@@ -92,7 +92,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
     await this.collection.createIndex({ deleted: 1, visible: 1 });
     await this.collection.createIndex(
       { ack: 1 },
-      { unique: true, sparse: true },
+      { unique: true, sparse: true }
     );
 
     if (this._shouldEnforceUniquePayload) {
@@ -128,7 +128,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
       payload: { $eq: hashKey },
     };
 
-    if (payload !== null && typeof payload === 'object') {
+    if (payload !== null && typeof payload === "object") {
       filter = {
         [`payload.${String(hashKey)}`]: payload[hashKey as keyof T],
       };
@@ -143,7 +143,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
         },
         $setOnInsert: insertFields,
       },
-      { upsert: true, returnDocument: 'after' },
+      { upsert: true, returnDocument: "after" }
     );
 
     if (!message.value) {
@@ -154,7 +154,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
   }
 
   async get<T>(
-    options: { visibility?: number } = {},
+    options: { visibility?: number } = {}
   ): Promise<Message<T> | undefined> {
     const visibility = options.visibility || this._visibility;
     const now = Date.now();
@@ -184,7 +184,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
 
     const result = await this.collection.findOneAndUpdate(query, update, {
       sort: { _id: 1 },
-      returnDocument: 'after',
+      returnDocument: "after",
     });
     const message = result.value;
 
@@ -209,7 +209,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
 
   async ping(
     ack: string,
-    options: { visibility?: number } = {},
+    options: { visibility?: number } = {}
   ): Promise<string> {
     const now = Date.now();
 
@@ -226,7 +226,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
     };
 
     const message = await this.collection.findOneAndUpdate(query, update, {
-      returnDocument: 'after',
+      returnDocument: "after",
     });
 
     if (!message.value) {
@@ -250,7 +250,7 @@ class MongoDbQueueImpl implements MongoDbQueue {
     };
 
     const message = await this.collection.findOneAndUpdate(query, update, {
-      returnDocument: 'after',
+      returnDocument: "after",
     });
 
     if (!message.value) {
@@ -299,7 +299,7 @@ export default function mongoDbQueue<T = unknown>(
     visibility?: number;
     expiry?: number;
     shouldEnforceUniquePayload?: boolean;
-  } = {},
+  } = {}
 ): MongoDbQueue<T> {
   return new MongoDbQueueImpl(db, name, options);
 }

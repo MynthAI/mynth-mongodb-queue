@@ -1,9 +1,9 @@
-import mongoDbQueue from '../../mynth-mongodb-queue';
-import setupMongo from '../__helpers__/setup-mongo';
-import sleep from '../__helpers__/sleep';
+import mongoDbQueue from "../../mynth-mongodb-queue";
+import setupMongo from "../__helpers__/setup-mongo";
+import sleep from "../__helpers__/sleep";
 
-describe('delay', () => {
-  const queueName = 'testing-delay-queue';
+describe("delay", () => {
+  const queueName = "testing-delay-queue";
   const setupDb = setupMongo();
 
   beforeAll(async () => {
@@ -21,7 +21,7 @@ describe('delay', () => {
   it("allows messages to be added with a longer visibility time than queue's default", async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
-    await queue.add('test delayed message processing', { delay: 1 });
+    await queue.add("test delayed message processing", { delay: 1 });
 
     let message = await queue.get();
 

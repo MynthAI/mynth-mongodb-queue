@@ -1,8 +1,8 @@
-import mongoDbQueue from '../mynth-mongodb-queue';
-import setupMongo from './__helpers__/setup-mongo';
+import mongoDbQueue from "../mynth-mongodb-queue";
+import setupMongo from "./__helpers__/setup-mongo";
 
-describe('mongodb-queue', () => {
-  const queueName = 'testing-default-queue';
+describe("mongodb-queue", () => {
+  const queueName = "testing-default-queue";
   const setupDb = setupMongo();
 
   beforeAll(async () => {
@@ -17,16 +17,16 @@ describe('mongodb-queue', () => {
     await setupDb.client?.close();
   });
 
-  it('returns `undefined` when getting a message from empty queue', async () => {
+  it("returns `undefined` when getting a message from empty queue", async () => {
     const queue = mongoDbQueue(setupDb.db, queueName);
 
     expect(await queue.get()).toBeUndefined();
   });
 
-  it('handles single round trip message', async () => {
+  it("handles single round trip message", async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
-    const messageId = await queue.add('test message');
+    const messageId = await queue.add("test message");
 
     expect(messageId).toBeDefined();
 
@@ -34,26 +34,26 @@ describe('mongodb-queue', () => {
 
     expect(message).toBeDefined();
     expect(message?.id).toBeDefined();
-    expect(typeof message?.id).toBe('string');
+    expect(typeof message?.id).toBe("string");
     expect(message?.id).toBe(messageId);
     expect(message?.ack).toBeDefined();
-    expect(typeof message?.ack).toBe('string');
+    expect(typeof message?.ack).toBe("string");
     expect(message?.createdAt).toBeDefined();
     expect(message?.createdAt).toBeInstanceOf(Date);
     expect(message?.updatedAt).toBeDefined();
     expect(message?.updatedAt).toBeInstanceOf(Date);
     expect(message?.tries).toBeDefined();
-    expect(typeof message?.tries).toBe('number');
+    expect(typeof message?.tries).toBe("number");
     expect(message?.tries).toBe(1);
     expect(message?.occurrences).toBe(1);
-    expect(message?.payload).toBe('test message');
+    expect(message?.payload).toBe("test message");
 
     // @ts-expect-error check is defined above
     const id = await queue.ack(message.ack);
     expect(id).toBeDefined();
   });
 
-  it('does not allow an message to be added twice if uniquekeys are repeated', async () => {
+  it("does not allow an message to be added twice if uniquekeys are repeated", async () => {
     const queue = mongoDbQueue(setupDb.db, queueName, {
       shouldEnforceUniquePayload: true,
     });
@@ -62,9 +62,9 @@ describe('mongodb-queue', () => {
     // await queue.add({text: 'test message'});
     const payload = {
       address:
-        'stake_test1uzd3t2cfyp0nzgy0dslsaaq5rcr686wnnsqgakga8hlj5ygskg9g6',
-      utxoHash: 'tx-hash',
-      amountOfAda: '1000.00',
+        "stake_test1uzd3t2cfyp0nzgy0dslsaaq5rcr686wnnsqgakga8hlj5ygskg9g6",
+      utxoHash: "tx-hash",
+      amountOfAda: "1000.00",
     };
     await queue.add({ payload });
     const message = await queue.get();
@@ -72,14 +72,14 @@ describe('mongodb-queue', () => {
     expect(message).toBeDefined();
 
     await expect(queue.add({ payload })).rejects.toThrow(
-      /E11000 duplicate key error/,
+      /E11000 duplicate key error/
     );
   });
 
-  it('does not allow an message to be acknowledged twice', async () => {
+  it("does not allow an message to be acknowledged twice", async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
-    await queue.add('test message');
+    await queue.add("test message");
     const message = await queue.get();
 
     expect(message).toBeDefined();
@@ -89,24 +89,24 @@ describe('mongodb-queue', () => {
 
     // @ts-expect-error check is defined above
     await expect(queue.ack(message.ack)).rejects.toThrow(
-      /^Queue.ack\(\): Unidentified ack : (.+)$/,
+      /^Queue.ack\(\): Unidentified ack : (.+)$/
     );
   });
 
-  it('throws when not passing a db', () => {
+  it("throws when not passing a db", () => {
     // @ts-expect-error testing without required db param
     expect(() => mongoDbQueue()).toThrow(
-      /^Please provide a mongodb.MongoClient.db$/,
+      /^Please provide a mongodb.MongoClient.db$/
     );
   });
 
-  it('throws when not passing a valid queue name', () => {
+  it("throws when not passing a valid queue name", () => {
     // @ts-expect-error testing without required queue name param
     expect(() => mongoDbQueue(setupDb.db)).toThrow(
-      /^Please provide a queue name$/,
+      /^Please provide a queue name$/
     );
-    expect(() => mongoDbQueue(setupDb.db, '')).toThrow(
-      /^Please provide a queue name$/,
+    expect(() => mongoDbQueue(setupDb.db, "")).toThrow(
+      /^Please provide a queue name$/
     );
   });
 });

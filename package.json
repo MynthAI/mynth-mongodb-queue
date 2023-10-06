@@ -22,7 +22,9 @@
     "prepare": "concurrently yarn:prepare:*",
     "prepare:build": "yarn build",
     "prepare:husky": "husky install",
-    "test": "jest"
+    "test": "jest",
+    "prettier": "npx prettier -w '**/*.{js,jsx,ts,tsx,json,yml.j2,yml,yaml,.*}'",
+    "lint": "concurrently \"npx prettier --check '**/*.{js,jsx,ts,tsx,json,yml.j2,yml,yaml,.*}'\" \"npx eslint --max-warnings=0\""
   },
   "devDependencies": {
     "@babel/core": "^7.18.9",

@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient } from "mongodb";
 
 class SetupMongo {
   private _client: MongoClient;
@@ -23,12 +23,12 @@ class SetupMongo {
 }
 
 export default function setupMongo(): SetupMongo {
-  const url = process.env.MONGO_URL || 'mongodb://localhost:27017/';
-  const dbName = process.env.MONGO_DB_NAME || 'mongodb-queue';
+  const url = process.env.MONGO_URL || "mongodb://localhost:27017/";
+  const dbName = process.env.MONGO_DB_NAME || "mongodb-queue";
 
   if (!dbName) {
     throw new Error(
-      'Please provide a `MONGO_DB_NAME` environment variable for testing',
+      "Please provide a `MONGO_DB_NAME` environment variable for testing"
     );
   }
 

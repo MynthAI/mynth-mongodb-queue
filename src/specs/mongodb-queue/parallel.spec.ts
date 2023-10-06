@@ -1,8 +1,8 @@
-import mongoDbQueue from '../../mynth-mongodb-queue';
-import setupMongo from '../__helpers__/setup-mongo';
+import mongoDbQueue from "../../mynth-mongodb-queue";
+import setupMongo from "../__helpers__/setup-mongo";
 
-describe('parallel', () => {
-  const queueName = 'testing-parallel-queue';
+describe("parallel", () => {
+  const queueName = "testing-parallel-queue";
   const setupDb = setupMongo();
 
   beforeAll(async () => {
@@ -17,11 +17,11 @@ describe('parallel', () => {
     await setupDb.client?.close();
   });
 
-  it('handles multiple parallel processes', async () => {
+  it("handles multiple parallel processes", async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
     const messageIdPromises = [...new Array(25)].map(() => {
-      return queue.add('test message');
+      return queue.add("test message");
     });
 
     const messageIds = await Promise.all(messageIdPromises);
@@ -29,14 +29,14 @@ describe('parallel', () => {
     expect(messageIds).toHaveLength(25);
 
     const messages = await Promise.all(
-      messageIds.map(async () => await queue.get()),
+      messageIds.map(async () => await queue.get())
     );
 
     expect(messages).toHaveLength(25);
 
     await Promise.all(
       // @ts-expect-error check is defined above
-      messages.map(async (message) => await queue.ack(message.ack)),
+      messages.map(async (message) => await queue.ack(message.ack))
     );
   });
 });

@@ -1,9 +1,2 @@
-# Project dependencies
-node_modules
-yarn-error.log
-
-# Tests' coverage report
-coverage
-
-# Generated files
-dist/
+*.md
+build

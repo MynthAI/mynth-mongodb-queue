@@ -30,8 +30,8 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [18.x]
-        mongodb-version: ['4.4']
-        mongodb-lib: ['^4.3.1']
+        mongodb-version: ["4.4"]
+        mongodb-lib: ["^4.3.1"]
 
     env:
       NODE: ${{ matrix.node-version }}
