@@ -7,7 +7,7 @@
   "jsnext:main": "dist/mynth-mongodb-queue.es.js",
   "types": "dist/types/mynth-mongodb-queue.d.ts",
   "repository": "https://github.com/MynthAI/mynth-mongodb-queue",
-  "author": "Kunjan Thakkar <kunj.thakkar2490@gmail.com>",
+  "author": "Mynth <info@mynth.ai>",
   "license": "MIT",
   "files": [
     "dist"
@@ -52,11 +52,6 @@
   },
   "engines": {
     "node": "^14.17.0 || >=16.0.0"
-  },
-  "standard-version": {
-    "scripts": {
-      "postchangelog": "prettier --write CHANGELOG.md"
-    }
   },
   "dependencies": {
     "@types/node": "^18.11.18",
