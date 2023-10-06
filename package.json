@@ -13,7 +13,7 @@
     "dist"
   ],
   "scripts": {
-    "lint": "concurrently yarn:lint:*",
+    "lint": "concurrently \"npx prettier --check '**/*.{js,jsx,ts,tsx,json,yml.j2,yml,yaml,.*}'\" \"npx eslint --max-warnings=0\"",
     "lint:eslint": "eslint .",
     "lint:ts": "tsc",
     "build": "concurrently yarn:build:*",
@@ -23,8 +23,7 @@
     "prepare:build": "yarn build",
     "prepare:husky": "husky install",
     "test": "jest",
-    "prettier": "npx prettier -w '**/*.{js,jsx,ts,tsx,json,yml.j2,yml,yaml,.*}'",
-    "lint": "concurrently \"npx prettier --check '**/*.{js,jsx,ts,tsx,json,yml.j2,yml,yaml,.*}'\" \"npx eslint --max-warnings=0\""
+    "prettier": "npx prettier -w '**/*.{js,jsx,ts,tsx,json,yml.j2,yml,yaml,.*}'"
   },
   "devDependencies": {
     "@babel/core": "^7.18.9",
@@ -36,7 +35,7 @@
     "@rollup/plugin-typescript": "^8.3.3",
     "@types/jest": "^28.1.6",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
+    "@typescript-eslint/parser": "^5.62.0",
     "builtin-modules": "^3.3.0",
     "concurrently": "^7.6.0",
     "conventional-changelog-cli": "^2.2.2",
