@@ -1,7 +1,13 @@
-# mynth-mongodb-queue
+# Mynth MongoDB Queue
 
-A really light-weight way to create queues with a nice API if you're already
-using MongoDB.
+This is a lightweight tool designed for use with MongoDB. It helps create queues
+with an easy-to-use API. This tool is a modified version of
+[openwar/mongodb-queue](https://github.com/openwar/mongodb-queue). The original
+version was developed based on
+[chilts/mongodb-queue](https://github.com/chilts/mongodb-queue). However, this
+version adopts a more contemporary approach, integrating promises and
+TypeScript. It utilizes MongoDB’s atomic operations to guarantee message safety
+and reliability.
 
 ## Getting started
 
