@@ -67,9 +67,9 @@ const id = queue.ack(msg.ack);
 // The 'id' of the message is returned, useful for logging.
 ```
 
-If you haven't already, you should call this to make sure indexes have been
-added in MongoDB. Of course, if you've called this once (in some kind one-off
-script) you don't need to call it in your program.
+If you haven’t already, you should call this to make sure indexes have been
+added in MongoDB. Of course, if you’ve called this once (in some kind one-off
+script) you don’t need to call it in your program.
 
 ```typescript
 await queue.createIndexes();
@@ -103,7 +103,7 @@ This example shows a queue with a message visibility of 30 seconds.
 ### name
 
 This is the name of the MongoDB Collection you wish to use to store the
-messages. Each queue you create will be it's own collection.
+messages. Each queue you create will be it’s own collection.
 
 e.g.
 
@@ -115,7 +115,7 @@ const notifyOwnerQueue = mongoDbQueue(db, 'notify-owner-queue');
 This will create two collections in MongoDB called `resize-image-queue` and
 `notify-owner-queue`.
 
-While using 2 instances of the same queue name won't interfere with each other
+While using 2 instances of the same queue name won’t interfere with each other
 and will play along nicely, it is not advisable. Instead please use the same
 instance in your code. This is specially important if you use different options
 for the queue, since it might lead to inconsistent behavior.
@@ -124,7 +124,7 @@ for the queue, since it might lead to inconsistent behavior.
 
 Default: `30`
 
-By default, if you don't acknowledge a message within the first 30 seconds after
+By default, if you don’t acknowledge a message within the first 30 seconds after
 receiving it, it is placed back in the queue so it can be fetched again. This is
 called the visibility window.
 
@@ -194,7 +194,7 @@ const id2 = await queue.add(payload, { hashKey: 'id' });
 // 'id1' is the same as 'id2', and it is useful for logging.
 ```
 
-In case your message doesn't have an idempotent key, you can easily generate one
+In case your message doesn’t have an idempotent key, you can easily generate one
 and append it to your payload.
 
 ```typescript
@@ -329,7 +329,7 @@ console.log('This queue has %d current messages', count);
 
 ### .inFlight()
 
-Returns the total number of messages that are currently in flight. i.e. that
+Returns the total number of messages that are currently in flight. i.e. that
 have been received but not yet acknowledged:
 
 ```typescript
