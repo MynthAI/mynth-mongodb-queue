@@ -1,8 +1,8 @@
-import mongoDbQueue from '../../mynth-mongodb-queue';
-import setupMongo from '../__helpers__/setup-mongo';
+import mongoDbQueue from "../../mynth-mongodb-queue";
+import setupMongo from "../__helpers__/setup-mongo";
 
-describe('duplicates', () => {
-  const queueName = 'testing-duplicates-queue';
+describe("duplicates", () => {
+  const queueName = "testing-duplicates-queue";
   const setupDb = setupMongo();
 
   beforeAll(async () => {
@@ -19,11 +19,11 @@ describe('duplicates', () => {
 
   it.each`
     value                                | hashKey
-    ${{ something: 'complex' }}          | ${'something'}
-    ${{ id: 'id1', value: 'something' }} | ${'id1'}
-    ${{ id: 'id2', value: 'something' }} | ${'value'}
+    ${{ something: "complex" }}          | ${"something"}
+    ${{ id: "id1", value: "something" }} | ${"id1"}
+    ${{ id: "id2", value: "something" }} | ${"value"}
   `(
-    'allows objects with `$value` : `$hashKey`',
+    "allows objects with `$value` : `$hashKey`",
     async ({
       value,
       hashKey,
@@ -43,14 +43,14 @@ describe('duplicates', () => {
       expect(messageId2).toBe(messageId1);
       expect((await queue.get())?.occurrences).toBe(2);
       expect(await queue.size()).toBe(0);
-    },
+    }
   );
 
   it.each`
     value
-    ${'test message'}
-    ${''}
-  `('allows string with `$value`', async ({ value }: { value: string }) => {
+    ${"test message"}
+    ${""}
+  `("allows string with `$value`", async ({ value }: { value: string }) => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
     const payload = value;
@@ -70,7 +70,7 @@ describe('duplicates', () => {
     ${0}
     ${10}
     ${-20}
-  `('allows number with `$value`', async ({ value }: { value: number }) => {
+  `("allows number with `$value`", async ({ value }: { value: number }) => {
     const queue = mongoDbQueue<number>(setupDb.db, queueName);
 
     const payload = value;
@@ -89,7 +89,7 @@ describe('duplicates', () => {
     value
     ${true}
     ${false}
-  `('allows boolean with `$value`', async ({ value }: { value: boolean }) => {
+  `("allows boolean with `$value`", async ({ value }: { value: boolean }) => {
     const queue = mongoDbQueue<boolean>(setupDb.db, queueName);
 
     const payload = value;

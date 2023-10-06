@@ -1,9 +1,9 @@
-import mongoDbQueue from '../../mynth-mongodb-queue';
-import setupMongo from '../__helpers__/setup-mongo';
-import sleep from '../__helpers__/sleep';
+import mongoDbQueue from "../../mynth-mongodb-queue";
+import setupMongo from "../__helpers__/setup-mongo";
+import sleep from "../__helpers__/sleep";
 
-describe('retries', () => {
-  const queueName = 'testing-retries-queue';
+describe("retries", () => {
+  const queueName = "testing-retries-queue";
   const setupDb = setupMongo();
 
   beforeAll(async () => {
@@ -18,10 +18,10 @@ describe('retries', () => {
     await setupDb.client?.close();
   });
 
-  it('allows retrying not acknowledged messages', async () => {
+  it("allows retrying not acknowledged messages", async () => {
     const queue = mongoDbQueue<string>(setupDb.db, queueName);
 
-    await queue.add('test message for retry');
+    await queue.add("test message for retry");
 
     const messageToIgnore = await queue.get({ visibility: 1 });
 
@@ -37,7 +37,7 @@ describe('retries', () => {
     expect(message?.tries).toBe(2);
 
     expect(message?.id).toBe(messageToIgnore?.id);
-    expect(message?.payload).toBe('test message for retry');
+    expect(message?.payload).toBe("test message for retry");
     expect(message?.payload).toBe(messageToIgnore?.payload);
 
     // @ts-expect-error check is defined above
