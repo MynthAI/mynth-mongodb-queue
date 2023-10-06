@@ -355,35 +355,3 @@ the database at slightly different times. Hence, a message or two might be
 counted twice or not at all depending on message turnover at any one time. You
 should not rely on these numbers for anything, but are included as
 approximations at any point in time for stats or health monitoring of the queue.
-
-## Use of MongoDB
-
-Whilst using MongoDB recently and having a need for lightweight queues, I
-realized that the atomic operations that MongoDB provides are ideal for this
-kind of job.
-
-Since everything it atomic, it is impossible to lose messages in or around your
-application. I guess MongoDB could lose them, but it's a safer bet it won't
-compared to your own application.
-
-As an example of the atomic nature being used, messages stay in the same
-collection and are never moved around or deleted, just a couple of fields are
-set, incremented or deleted. We always use MongoDB's excellent
-`collection.findAndModify()` so that each message is updated atomically inside
-MongoDB and we never have to fetch something, change it and store it back.
-
-## Acknowledgements
-
-This is heavily based on
-[@chilts's work](https://github.com/chilts/mongodb-queue), but wanted to use
-more modern approach (like promises and typescript) and a few changes for my
-requirements.
-
-This package is not a full replacement of the forked one, since I did remove
-some features (like `clean()`, `deadQueue` and `maxRetries`) as well as allowing
-the messages to be arrays. In my case I want to be able to add any message type
-and as for the other features, I don't need them and might add them later.
-
-## License
-
-This project it [MIT licensed](./LICENSE).
